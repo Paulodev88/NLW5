@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:nlw/core/app_colors.dart';
 import 'package:nlw/core/core.dart';
@@ -8,6 +10,7 @@ class QuizCardWidget extends StatelessWidget {
   final String completed;
   final double percent;
   final VoidCallback onTap;
+  final String image;
 
   const QuizCardWidget({
     Key? key,
@@ -15,6 +18,7 @@ class QuizCardWidget extends StatelessWidget {
     required this.completed,
     required this.percent,
     required this.onTap,
+    required this.image,
   }) : super(key: key);
 
   @override
@@ -32,8 +36,7 @@ class QuizCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-                height: 40, width: 40, child: Image.asset(AppImages.blocks)),
+            Container(height: 40, width: 40, child: Image.asset(image)),
             SizedBox(
               height: 10,
             ),
