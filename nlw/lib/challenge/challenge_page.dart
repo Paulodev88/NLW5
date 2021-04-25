@@ -3,12 +3,18 @@ import 'package:nlw/challenge/challenger_controller.dart';
 import 'package:nlw/challenge/widgets/next_button/next_button_widget.dart';
 import 'package:nlw/challenge/widgets/question_indicator/question_indicator_widget.dart';
 import 'package:nlw/challenge/widgets/quiz/quiz_widget.dart';
+import 'package:nlw/result/result_page.dart';
 import 'package:nlw/shared/models/question_model.dart';
 
 class ChallengePage extends StatefulWidget {
   final List<QuestionModel> questions;
+  final String title;
 
-  const ChallengePage({Key? key, required this.questions}) : super(key: key);
+  const ChallengePage({
+    Key? key,
+    required this.questions,
+    required this.title,
+  }) : super(key: key);
   @override
   _ChallengePageState createState() => _ChallengePageState();
 }
@@ -27,7 +33,14 @@ class _ChallengePageState extends State<ChallengePage> {
   void nextPage() {
     if (controller.currentPage < widget.questions.length)
       pageController.nextPage(
-          duration: Duration(milliseconds: 500), curve: Curves.linear);
+          duration: Duration(milliseconds: 250), curve: Curves.linear);
+  }
+
+  void onSelected(bool value) {
+    if (value) {
+      controller.countAnwserRight++;
+    }
+    nextPage();
   }
 
   @override
@@ -61,7 +74,7 @@ class _ChallengePageState extends State<ChallengePage> {
             .map(
               (e) => QuizWidget(
                 question: e,
-                onChange: nextPage,
+                onSelected: onSelected,
               ),
             )
             .toList(),
@@ -87,25 +100,20 @@ class _ChallengePageState extends State<ChallengePage> {
                           child: NextButtonWidget.green(
                             label: "Confirmar",
                             onTap: () {
-                              Navigator.pop(context);
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ResultPage(
+                                      title: widget.title,
+                                      length: widget.questions.length,
+                                      result: controller.countAnwserRight,
+                                    ),
+                                  ));
                             },
                           ),
                         )
                     ],
                   )),
-
-          // Row(
-          //     crossAxisAlignment: CrossAxisAlignment.center,
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: [
-          //       Expanded(
-          //         child: NextButtonWidget.white(
-          //           label: "Pular",
-          //           onTap: nextPage,
-          //         ),
-          //       ),
-
-          //     ]),
         ),
       ),
     );
